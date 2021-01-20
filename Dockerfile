@@ -13,6 +13,9 @@ ENV YQ_PACKAGE=yq_linux_amd64.tar.gz
 ENV YQ_URL=https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/${YQ_PACKAGE}
 
 RUN apk add --no-cache bash bash-completion curl git groff jq && \
+    ### eksctl
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+    mv /tmp/eksctl /usr/local/bin && \
     ### kubectl
     KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) && \
     KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
@@ -23,13 +26,13 @@ RUN apk add --no-cache bash bash-completion curl git groff jq && \
     tar -zxvf /tmp/${HELM_PACKAGE} && \
     mv linux-amd64/helm ${HELM_PATH} && \
     chmod +x ${HELM_PATH} && \
-    rm -rf linux-amd64 && \
+    rm -rf linux-amd64 /tmp/${HELM_PACKAGE} && \
     ### yq
     curl -Ls ${YQ_URL} -o /tmp/${YQ_PACKAGE} && \
     tar -zxvf /tmp/${YQ_PACKAGE} && \
     mv yq_linux_amd64 ${YQ_PATH} && \
     chmod +x ${YQ_PATH} && \
-    rm -f yq_linux_amd64 && \
+    rm -f yq_linux_amd64 /tmp/${YQ_PACKAGE} && \
     ### awscli v2 - https://github.com/mjaromi/docker-alpine-awscli
     GLIBC_VER=$(wget -q -O - https://api.github.com/repos/sgerrand/alpine-pkg-glibc/git/refs/tags | jq -r '.[-1].ref' | awk -F/ '{print $NF}') && \
     wget -q -O glibc-${GLIBC_VER}.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk && \

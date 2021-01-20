@@ -1,9 +1,12 @@
- ________________________________________
-| docker image contains following tools: |
-| awscli(v2) git helm jq kubectl yq      |
- ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ __________________________________________
+| docker image contains following tools:   |
+| awscli(v2) eksctl git helm jq kubectl yq |
+ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
         \   ^__^
          \  (oo)\_______
             (__)\       )\/
                 ||----w |
                 ||     ||
+
+[✓] Happy Kuberneting!
+
