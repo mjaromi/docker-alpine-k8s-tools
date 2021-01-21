@@ -1,0 +1,42 @@
+FROM amazon/aws-cli:2.1.19
+
+ENV KUBECTL_PATH=/usr/local/bin/kubectl
+
+ENV HELM_PATH=/usr/local/bin/helm
+ENV HELM_VERSION=3.4.2
+ENV HELM_PACKAGE=helm-v${HELM_VERSION}-linux-amd64.tar.gz
+ENV HELM_URL=https://get.helm.sh/${HELM_PACKAGE}
+
+ENV YQ_PATH=/usr/local/bin/yq
+ENV YQ_VERSION=4.3.2
+ENV YQ_PACKAGE=yq_linux_amd64.tar.gz
+ENV YQ_URL=https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/${YQ_PACKAGE}
+
+RUN yum -y update && yum -y install bash-completion git gzip jq tar && \
+    ### eksctl
+    curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
+    mv /tmp/eksctl /usr/local/bin && \
+    ### kubectl
+    KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) && \
+    KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+    curl -Ls ${KUBECTL_URL} -o ${KUBECTL_PATH} && \
+    chmod +x ${KUBECTL_PATH} && \
+    ### helm
+    curl -Ls ${HELM_URL} -o /tmp/${HELM_PACKAGE} && \
+    tar -zxvf /tmp/${HELM_PACKAGE} && \
+    mv linux-amd64/helm ${HELM_PATH} && \
+    chmod +x ${HELM_PATH} && \
+    rm -rf linux-amd64 /tmp/${HELM_PACKAGE} && \
+    ### yq
+    curl -Ls ${YQ_URL} -o /tmp/${YQ_PACKAGE} && \
+    tar -zxvf /tmp/${YQ_PACKAGE} && \
+    mv yq_linux_amd64 ${YQ_PATH} && \
+    chmod +x ${YQ_PATH} && \
+    rm -f yq_linux_amd64 /tmp/${YQ_PACKAGE} && \
+    ### cleanup
+    rm -rf /var/cache/yum && yum clean all
+
+COPY .bashrc /root/.bashrc
+COPY motd /etc/motd
+
+ENTRYPOINT [ "/bin/bash" ]
