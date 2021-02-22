@@ -7,7 +7,8 @@ This docker image contains following tools:
 * eksctl
 * helm
 * jq
-* kubectl
+* krew
+* kubectl (plugins: ctx, ns)
 * yq
 
 ## build
