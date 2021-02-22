@@ -12,7 +12,7 @@ ENV YQ_VERSION=4.3.2
 ENV YQ_PACKAGE=yq_linux_amd64.tar.gz
 ENV YQ_URL=https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/${YQ_PACKAGE}
 
-RUN apk add --no-cache bash bash-completion curl git groff jq && \
+RUN apk add --no-cache bash bash-completion curl git groff jq ncurses && \
     ### eksctl
     curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp && \
     mv /tmp/eksctl /usr/local/bin && \
@@ -21,6 +21,11 @@ RUN apk add --no-cache bash bash-completion curl git groff jq && \
     KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     curl -Ls ${KUBECTL_URL} -o ${KUBECTL_PATH} && \
     chmod +x ${KUBECTL_PATH} && \
+    ### krew and ctx, ns plugins
+    curl --silent --location https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz | tar xz -C /tmp && \
+    /tmp/krew-linux_amd64 install krew && \
+    PATH="$HOME/.krew/bin:$PATH" && \
+    kubectl krew install ctx ns && \
     ### helm
     curl -Ls ${HELM_URL} -o /tmp/${HELM_PACKAGE} && \
     tar -zxvf /tmp/${HELM_PACKAGE} && \
@@ -48,7 +53,7 @@ RUN apk add --no-cache bash bash-completion curl git groff jq && \
     unzip -q awscliv2.zip && \
     ./aws/install && \
     ln -s /usr/local/bin/aws /usr/bin/aws && \
-    rm -rf aws awscliv2.zip glibc-${GLIBC_VER}.apk glibc-bin-${GLIBC_VER}.apk && \
+    rm -rf aws awscliv2.zip glibc-${GLIBC_VER}.apk glibc-bin-${GLIBC_VER}.apk /tmp/* && \
     ### cleanup
     rm -f /var/cache/apk/*
 

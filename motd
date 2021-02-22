@@ -1,7 +1,14 @@
- __________________________________________
-| docker image contains following tools:   |
-| awscli(v2) eksctl git helm jq kubectl yq |
- ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ ________________________________________
+| docker image contains following tools: |
+| - awscli(v2)                           |
+| - eksctl                               |
+| - git                                  |
+| - helm                                 |
+| - jq                                   |
+| - krew                                 |
+| - kubectl (plugins: ctx, ns)           |
+| - yq                                   |
+ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
         \   ^__^
          \  (oo)\_______
             (__)\       )\/

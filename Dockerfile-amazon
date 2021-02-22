@@ -21,6 +21,11 @@ RUN yum -y update && yum -y install bash-completion git gzip jq tar && \
     KUBECTL_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     curl -Ls ${KUBECTL_URL} -o ${KUBECTL_PATH} && \
     chmod +x ${KUBECTL_PATH} && \
+    ### krew and ctx, ns plugins
+    curl --silent --location https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz | tar xz -C /tmp && \
+    /tmp/krew-linux_amd64 install krew && \
+    PATH="$HOME/.krew/bin:$PATH" && \
+    kubectl krew install ctx ns && \
     ### helm
     curl -Ls ${HELM_URL} -o /tmp/${HELM_PACKAGE} && \
     tar -zxvf /tmp/${HELM_PACKAGE} && \

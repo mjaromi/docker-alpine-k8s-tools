@@ -14,3 +14,4 @@ complete -F __start_kubectl k
 complete -C '/usr/local/bin/aws_completer' aws
 
 export PS1='k8s-tools# '
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
